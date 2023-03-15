@@ -41,9 +41,10 @@ export default {
                     this.errors = {};
                     this.success = true;
                     this.$router.push({ name: 'categoriesList' });
+                    
                     setInterval(() => {
                         this.success = false;
-                    }, 2500);
+                    }, 1000);
                 })
                 .catch((error) => {
                     console.log(error);

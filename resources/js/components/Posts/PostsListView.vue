@@ -1,55 +1,50 @@
 <template>
-    <div class="categories-list">
-        <h1>Categories List</h1>
+    <div class="posts-list">
+        <h1>Posts List</h1>
 
-        <!-- success message -->
-        <div class="success-msg" v-if="success">
-                <i class="fa fa-check"></i>
-               Added Category successfully
-        </div>
-        <!-- updated message -->
-        <div class="success-msg" v-if="success">
-                <i class="fa fa-check"></i>
-               Updated Category successfully
-        </div>
         <!-- deleted message -->
         <div class="success-msg" v-if="deleted">
                 <i class="fa fa-check"></i>
-               Deleted Category successfully
+               Deleted Post successfully
         </div>
 
         <table class="table table-striped">
             <thead>
                 <tr class="table-primary">
                     <th scope="col">#</th>
-                    <th scope="col">Name</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">user Name</th>
+                    <th scope="col">category_id</th>
+                    <th scope="col">body</th>
                     <th scope="col" colspan="2">actions</th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="(item,index) in items" :key="item.id">
                     <th scope="row">{{ index+1 }}</th>
-                    <td>{{ item.name }}</td>
+                    <td>{{ item.title }}</td>
+                    <td>{{ item.user }}</td>
+                    <td>{{ item.category_id }}</td>
+                    <td>{{ item.body }}</td>
                     <td>
-                        <router-link :to="{name:'edit-category' ,params:{id:item.id}}" class="btn btn-info">Edit</router-link>
+                        <!-- <router-link :to="{name:'edit-post' ,params:{id:item.id}}" class="btn btn-info">Edit</router-link> -->
+                        <router-link :to="{name:'edit-post', params:{id:item.id}}" class="btn btn-info">Edit</router-link>
                     </td>
                     <td>
-                        <button class="btn btn-danger" @click="deleteCategory(item.id)">Delete</button>
+                        <button class="btn btn-danger" @click="deletePost(item.id)">Delete</button>
                     </td>
                 </tr>
               
             </tbody>
         </table>
 
-
-        <router-link class="btn btn-primary flex-center" :to="{ name: 'create-category' }">Create Categories<span>&#8594;</span></router-link>
-        <!-- <div class="position-absolute bottom-50 end-50"> -->
-        <!-- </div> -->
+        <router-link class="btn btn-primary flex-center" :to="{ name: 'create-post' }">Create Posts<span>&#8594;</span></router-link>
     </div>
 </template>
   
 <script>
 export default {
+    params: ['id'],
     data() {
         return {
             items: [],
@@ -59,50 +54,52 @@ export default {
         };
     },
     methods: {
-        getCategories() {
-            axios.get('/api/categories')
+        getPosts() {
+            axios.get('/api/posts')
                 .then(response => {
-                    this.items = response.data
+                    console.log(response.data.data);
+                    this.items = response.data.data
                 })
                 .catch(error => {
                     console.log(error);
                 })
         },
 
-        deleteCategory(id) {
-            axios.delete('/api/categories/' + id)
+        deletePost(id) {
+            axios.delete('/api/posts/' + id)
                 .then(response => {
                     this.deleted = true;
                     setTimeout(() => {
                         this.deleted = false;
-                        this.getCategories()
+                        this.getPosts()
                         
-                    }, 1000);
+                    }, 500);
                 })
                 .catch(error => {
                     console.log(error);
                 })
         }
     },
+    
     mounted() {
-        this.getCategories()
+        this.getPosts()
     }
 };
 </script>
   
 <style scoped>
-.categories-list {
+.posts-list {
     min-height: 100vh;
     background: #fff;
 }
 
-.categories-list h1 {
+.posts-list h1 {
     font-weight: 300;
     padding: 50px 0 30px 0;
     text-align: center;
 }
 
-.categories-list .item {
+.posts-list .item {
     display: flex;
     justify-content: right;
     align-items: center;
@@ -110,17 +107,17 @@ export default {
     margin: 0 auto !important;
 }
 
-.categories-list .item p {
+.posts-list .item p {
     font-size: 16px;
 }
 
-.categories-list .item p,
-.categories-list .item div,
-.categories-list .item {
+.posts-list .item p,
+.posts-list .item div,
+.posts-list .item {
     margin: 15px 8px;
 }
 
-.categories-list .item div a {
+.posts-list .item div a {
     padding: 6px 20px;
     background-color: #4caf50;
     color: #fff;
@@ -128,7 +125,7 @@ export default {
     display: inline-block;
 }
 
-.categories-list .item input {
+.posts-list .item input {
     padding: 6px 13px;
     background-color: red;
     color: #fff;
@@ -138,37 +135,37 @@ export default {
     font-size: 14px;
 }
 
-.categories ul li {
+.posts ul li {
     list-style: none;
     background-color: #494949;
     margin: 20px 5px;
     border-radius: 15px;
 }
 
-.categories ul {
+.posts ul {
     display: flex;
     justify-content: center;
 }
 
-.categories a {
+.posts a {
     color: white;
     padding: 10px 20px;
     display: inline-block;
 }
 
-.create-categories a,
-.index-categories a {
+.create-posts a,
+.index-posts a {
     all: revert;
     margin: 20px 0;
     display: inline-block;
     text-decoration: none;
 }
 
-.create-categories a span,
-.index-categories a span {
+.create-posts a span,
+.index-posts a span {
     font-size: 22px;
 }
 
-.index-categories {
+.index-posts {
     text-align: center;
 }</style>

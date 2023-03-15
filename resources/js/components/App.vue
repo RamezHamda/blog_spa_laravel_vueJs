@@ -4,7 +4,7 @@
             <!-- sidebar -->
             <div class="sidebar" :class="{showOverlay:overlayVisibility}">
                 <span class="closeButton" @click="hideOverlay">&times;</span>
-                <p class="brand-title"><a href="">Alphayo Blog</a></p>
+                <p class="brand-title"><a href="">Ramez Blog 2023</a></p>
 
                 <div class="side-links">
                     <ul>
@@ -46,7 +46,7 @@
                         <a href=""><i class="fab fa-twitter"></i></a>
                     </div>
 
-                    <small>&copy 2021 Alphayo Blog</small>
+                    <small> Ramez Blog &copy 2023</small>
                 </footer>
             </div>
             <!-- Menu Button -->
@@ -59,7 +59,7 @@
 
             <!-- main -->
             <main class="container">
-                <RouterView @update-sidebar="updateSidebar"></RouterView>
+                <RouterView @update-sidebar="updateSidebar" :key="$route.path"></RouterView>
             </main>
 
             <!-- Main footer -->
@@ -69,7 +69,7 @@
                     <a href=""><i class="fab fa-instagram"></i></a>
                     <a href=""><i class="fab fa-twitter"></i></a>
                 </div>
-                <small>&copy; 2021 Alphayo Blog</small>
+                <small>Ramez Blog &copy 2023</small>
             </footer>
         </div>
     </div>

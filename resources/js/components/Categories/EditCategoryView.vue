@@ -36,9 +36,7 @@ export default {
                 .then(() => {
                     this.field = {};
                     this.errors = {};
-                    this.$router.push({ name: 'categoriesList' }, () => {
-                        this.$emit('update');
-                    });
+                    this.$router.push({ name: 'categoriesList' });
                 })
                 .catch((error) => {
                     console.log(error);

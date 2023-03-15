@@ -62,6 +62,15 @@ const routes = [
             },
         },
         {
+            path: '/:pathMatch(.*)*',
+            name: 'not-found',
+            component: () => import('../components/NotFoundView.vue'),
+            meta: {
+                title: 'Create Post',
+                requiresAuth: true
+            },
+        },
+        {
             path: '/dashboard',
             name: 'dashboard',
             component: () => import('../components/DashboardView.vue'),
@@ -107,6 +116,26 @@ const routes = [
                 requiresAuth: true
             },
         },
+        {
+            path: '/posts',
+            name: 'postsList',
+            component: () => import('../components/Posts/PostsListView.vue'),
+            meta: {
+                title: 'Posts List',
+                requiresAuth: true
+            },
+        },
+        {
+            path: '/posts/:id/edit',
+            name: 'edit-post',
+            component: () => import('../components/Posts/EditPostView.vue'),
+            meta: {
+                title: 'Edit Post',
+                requiresAuth: true
+            },
+            props: true 
+        },
+        
 
 
     ]

@@ -2,9 +2,11 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PostController;
 use App\Http\Controllers\API\AuthController;
-use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\API\HomeController;
+use App\Http\Controllers\API\PostController;
+use App\Http\Controllers\API\CategoryController;
+use App\Http\Controllers\API\RelatedPostsController;
 use Laravel\Fortify\Http\Controllers\RegisteredUserController;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 
@@ -38,12 +40,15 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::put('categories/{category}', [CategoryController::class, 'update']);
     Route::delete('categories/{category}', [CategoryController::class, 'destroy']);
     // Posts routes
-    Route::post('posts', [PostController::class, 'store']);
     Route::get('posts', [PostController::class, 'index']);
-    Route::get('posts/{post}', [PostController::class, 'show']);
+    Route::post('posts/create', [PostController::class, 'store']);
+    Route::get('posts/{post:id}', [PostController::class, 'show']);
     Route::put('posts/{post}', [PostController::class, 'update']);
     Route::delete('posts/{post}', [PostController::class, 'destroy']);
-    
+    // Home routes
+    Route::get('home-posts', [HomeController::class, 'index']);
+    // Related posts routes
+    Route::get('related-posts/{post:slug}', [RelatedPostsController::class, 'index']);
 });
 
 // Route::post('register', [RegisteredUserController::class, 'store']);

@@ -6,6 +6,8 @@
         <div class="links">
             <ul>
                 <li><router-link :to="{ name: 'create-post' }">Create Posts</router-link></li>
+           
+                <li><router-link :to="{ name: 'postsList' }">Posts List</router-link></li>
 
                 <li><router-link :to="{name:'create-category'}">Create Category</router-link></li>
 
@@ -13,6 +15,7 @@
                 <router-link :to="{ name: 'categoriesList' }">Categories List</router-link>
                 </li>
             </ul>
+            
         </div>
     </div>
 </template>
