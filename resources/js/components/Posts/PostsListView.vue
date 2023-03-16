@@ -5,6 +5,10 @@
             <i class="fa fa-check"></i>
             Post edited successfully
         </div>
+        <div class="fails-msg" v-if="editFail">
+            <font-awesome-icon icon="fa-solid fa-exclamation" />
+            Not Allowed to edit this post
+        </div>
         <!-- deleted message -->
         <div class="success-msg" v-if="deleted">
                 <i class="fa fa-check"></i>
@@ -50,7 +54,7 @@
 // import useStore from "../../stores/store";
 // export const store = useStore();
 export default {
-    props: ["editSuccess"],
+    props: ["editSuccess", "editFail"],
     emits: ["updateSidebar"],
     data() {
         return {
@@ -62,7 +66,7 @@ export default {
     },
     methods: {
         getPosts() {
-            axios.get('/api/posts')
+            axios.get('/api/postsUser')
                 .then(response => {
                     this.items = response.data.data
 

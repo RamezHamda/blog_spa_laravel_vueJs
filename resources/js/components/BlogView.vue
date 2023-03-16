@@ -3,7 +3,7 @@
       <h2 class="header-title">All Blog Posts</h2>
       <div class="searchbar">
         <form action="">
-          <input type="text" placeholder="Search..." name="search" />
+          <input type="text" placeholder="Search..." name="search" v-model="title"/>
 
           <button type="submit">
             <i class="fa fa-search"></i>
@@ -13,8 +13,9 @@
       </div>
       <div class="categories">
         <ul>
-          // show category name and linked it to category view
-          <li><a href="">Health</a></li>
+          <li v-for="category in categories" :key="category.id">
+            <a href="#" @click="filterByCategory(category.name)">{{ category.name }}</a>
+          </li>
         </ul>
       </div>
       <section class="cards-blog latest-blog">
@@ -31,17 +32,19 @@
         </div>
         
       </section>
-
-      <!-- pagination -->
+      <h3 v-if="!posts.length">Sorry, Your Search is: {{ title }}  not Found</h3>
+        
       <div class="pagination" id="pagination">
-          <a href="">&laquo;</a>
-          <a class="active" href="">1</a>
-          <a href="">2</a>
-          <a href="">3</a>
-          <a href="">4</a>
-          <a href="">5</a>
-          <a href="">&raquo;</a>
-        </div>
+          <a 
+          href="#" 
+          v-for="(link,index) in links" 
+          :key="index" 
+          v-html="link.label"
+          :class="{active: link.active , disabled:!link.url || link.active}"
+          @click="changePage(link)"
+          >
+        </a>
+      </div>
     </main>
 </template>
 
@@ -53,12 +56,60 @@ export default {
   data() {
     return {
       posts: [],
+      categories: [],
+      title: "",
+      links: [],
     };
   },
+  methods: {
+    filterByCategory(name) {
+      axios.get("api/postsBlog", { params: { category: name } })
+      .then((response) => {
+        this.links = response.data.meta.links;
+        this.posts = response.data.data;
+      });
+    },
+
+    changePage(link){
+      if(!link.url){
+        return;
+      }
+
+      axios.get(link.url)
+      .then((response) => {
+        this.links = response.data.meta.links;
+        this.posts = response.data.data;
+      });
+    }
+  },
   mounted() {
-    axios.get("api/posts").then((response) => {
+    axios.get("api/postsBlog").then((response) => {
       this.posts = response.data.data;
+      this.links = response.data.meta.links;
+    });
+
+    axios('api/categories')
+    .then((response) => {
+      // console.log(response);
+      this.categories = response.data;
     });
   },
+  watch: {
+    title() {
+      axios.get("api/postsBlog", { params: { search: this.title } })
+      .then((response) => {
+        this.links = response.data.meta.links;
+        this.posts = response.data.data;
+      });
+    },
+  },
+
+
 };
 </script>
+
+<style scoped>
+.disabled {
+  pointer-events: none;
+}
+</style>

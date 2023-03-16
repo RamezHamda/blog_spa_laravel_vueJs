@@ -7,15 +7,35 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\PostResource;
+use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 
 class PostController extends Controller
 {
-    public function index()
+    public function indexPostUser()
     {
         return PostResource::collection(
-            Post::latest()->get()
+            Post::where("user_id" , auth()->user()->id)->latest()->paginate(2)->withQueryString()
+        );
+    }
+
+    public function indexPostBlog(Request $request)
+    {
+        if($request->category){
+            return PostResource::collection(
+               Category::where("name" , $request->category)->firstOrFail()->posts()->latest()->paginate(2)->withQueryString()
+            );
+        } else if($request->search){
+            return PostResource::collection(
+                Post::where('title' , 'like',"%" . $request->search . "%")
+                ->orWhere('body' , 'like', "%" . $request->search . "%")
+                ->latest()->paginate(2)->withQueryString()
+            );
+        }
+
+        return PostResource::collection(
+            Post::latest()->paginate(2)->withQueryString()
         );
     }
 
@@ -53,52 +73,27 @@ class PostController extends Controller
         ]);
     }
 
-    public function show(Post $post)
+    public function showFront(Post $post)
     {
-        // return PostResource::collection(Post::where('slug', $post->slug)->get());
         return new PostResource($post);
     }
 
-    // public function update(Request $request, Post $post)
-    // {
-    //     $request->validate([
-    //         'title' => 'required',
-    //         'body' => 'required',
-    //         'category_id' => 'required',
-    //         'file' => 'image|required'
-    //     ]);
+    public function showDashboard(Post $post)
+    {
+        // if($post->user_id != auth()->user()->id) {
+        //     return abort(403, 'You are not authorized to update this post');
+        // }
 
-    //     $title = $request->title;
-    //     $category_id = $request->category_id;
+        return new PostResource($post);
 
-    //     if (!Post::count()) {
-    //         $postId = 1;
-    //     } else {
-    //         $postId = Post::latest()->first()->id + 1;
-    //     }
-
-    //     $slug = Str::slug($title, '-') . '-' . $postId;
-    //     $user_id = auth()->user()->id;
-    //     $body = $request->input('body');
-
-    //     if ($request->hasFile('file')) {
-    //         $imagePath = 'storage/' . $request->file('file')->store('postsImages', 'public');
-    //     } else {
-    //         $imagePath = $post->imagePath;
-    //     }
-
-    //     $post->update([
-    //         'title' => $title,
-    //         'category_id' => $category_id,
-    //         'slug' => $slug,
-    //         'user_id' => $user_id,
-    //         'body' => $body,
-    //         'imagePath' => $imagePath
-    //     ]);
-    // }
+    }
 
     public function update(Request $request, Post $post)
     {
+        if($post->user_id != auth()->user()->id) {
+            return abort(403, 'You are not authorized to update this post');
+        }
+
         $request->validate([
             'title' => 'required',
             'file' => 'nullable | image',
@@ -136,7 +131,7 @@ class PostController extends Controller
     // public function search(Request $request)
     // {
     //     $search = $request->input('search');
-    //     $posts = Post::where('title', 'like', '%' . $search . '%')->get();
+    //     $posts = Post::where('title', 'like', '%' . $search . '%')->paginate(2)->withQueryString();
     //     return $posts;
     // }
 }

@@ -23,10 +23,6 @@
         <button type="submit">Sign Up</button>
         <span>Have an account?<router-link :to="{name:'login'}"> Log in</router-link></span>
       </form>
-
-      <div>
-        {{ fields.name }} {{ fields.email }}
-      </div>
     </div>
   </template>
   
@@ -36,10 +32,7 @@
     data() {
         return {
             fields: {
-                name: '',
-                email: '',
-                password: '',
-                password_confirmation: '',
+                
             },
             errors: ''
         }
@@ -49,7 +42,7 @@
             axios.post('api/register', this.fields)
             .then(response => {
                 // console.log(response);
-                this.fields = response.data.data
+                // this.fields = response.data.data
                 this.$router.push({name: 'dashboard'})
             })
             .catch(error => {

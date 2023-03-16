@@ -33,7 +33,7 @@ Route::post('login', [AuthenticatedSessionController::class, 'store']);
 Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
     ->middleware('auth:sanctum');
 
-
+    // Dashboard routes
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('categories', [CategoryController::class, 'index']);
     Route::post('categories/create', [CategoryController::class, 'store']);
@@ -41,26 +41,22 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::put('categories/{category}', [CategoryController::class, 'update']);
     Route::delete('categories/{category}', [CategoryController::class, 'destroy']);
     // Posts routes
-    
+
     Route::post('posts/create', [PostController::class, 'store']);
-    // For edit post (Showing data in form fields when editing a post and updating it)
-    Route::get('posts/{post:slug}', [PostController::class, 'show']);
-    Route::put('posts/{post:slug}', [PostController::class, 'update']);
-    // For edit post (Showing data in form fields when editing a post and updating it)
-    Route::delete('posts/{post}', [PostController::class, 'destroy']);
-    // Home routes 
-    
-    // Related posts routes
-    
+    Route::put('posts/{post:slug}/edit', [PostController::class, 'update']);
+    Route::delete('posts/{post}', [PostController::class, 'destroy']);    
 });
-Route::get('posts', [PostController::class, 'index']);
+    // Frontend routes
+Route::get('postsUser', [PostController::class, 'indexPostUser']);
+Route::get('postsBlog', [PostController::class, 'indexPostBlog']);
 Route::get('home-posts', [HomeController::class, 'index']);
 Route::get('related-posts/{post:slug}', [RelatedPostsController::class, 'index']);
-// Route::post('register', [RegisteredUserController::class, 'store']);
+Route::get('posts/{post:slug}', [PostController::class, 'showDashboard']);
+// Route::get('posts/{post:slug}', [PostController::class, 'showFront']);
 
+
+// for me it was not working with the following code, so I used the code above
 // Route::post('register', [AuthController::class, 'register']);
-
 // Route::post('login', [AuthController::class, 'login']);
-
 // Route::post('logout', [AuthController::class, 'logout']);
 

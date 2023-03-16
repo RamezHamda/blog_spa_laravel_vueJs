@@ -89,7 +89,7 @@
         fd.append("body", this.fields.body);
         fd.append("_method", "PUT");
         axios
-          .post(`/api/posts/${this.slug}`, fd, {
+          .post(`/api/posts/${this.slug}/edit`, fd, {
             headers: {
               "content-type": "multipart/form-data",
             },
@@ -100,6 +100,11 @@
           })
           .catch((error) => {
             this.errors = error.response.data.errors;
+            if(error.response.status == 403) {
+              this.$emit("showEditFail");
+              this.$router.push({ name: "postsList" });
+            }
+            
           });
       },
     },
@@ -110,6 +115,7 @@
         .catch((error) => {
           console.log(error);
         });
+
       axios
         .get("/api/posts/" + this.slug)
         .then((response) => {
@@ -118,6 +124,9 @@
         })
         .catch((error) => {
           console.log(error);
+          if(error.response.status == 403) {
+            this.$router.push({ name: "postsList" });
+          }
         });
     },
   };

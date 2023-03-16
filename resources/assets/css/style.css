@@ -527,6 +527,18 @@ textarea {
     right: 30px;
 }
 
+.fails-msg {
+  padding: 10px 12px;
+  border-radius: 3px;
+  color: red;
+  background-color: #dff2bf;
+  position: fixed;
+    top: 30px;
+    right: 30px;
+}
+
+
+
 .end-50 {
   right: 37%!important;
 }

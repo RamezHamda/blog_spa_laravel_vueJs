@@ -75,7 +75,7 @@ const routes = [
             name: 'not-found',
             component: () => import('../components/NotFoundView.vue'),
             meta: {
-                title: 'Create Post',
+                title: 'Not Found',
             },
         },
         {
@@ -160,7 +160,5 @@ const DEFAULT_NAME = 'Blog SPA'
 router.afterEach((to)=>{
     document.title = to.meta.title || DEFAULT_NAME
 })
-
-
 
 export default router

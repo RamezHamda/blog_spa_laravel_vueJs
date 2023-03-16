@@ -63,7 +63,11 @@
                  @update-sidebar="updateSidebar" 
                  :key="$route.path"
                  @show-edit-success="showEditSuccess"
-                :editSuccess="editSuccess">
+                 @show-edit-fail="showEditFail"
+                 :editSuccess="editSuccess"
+                 :editFail="editFail"
+                 >
+
                 </RouterView>
             </main>
 
@@ -91,6 +95,7 @@ export default {
             overlayVisibility: false,
             loggedIn: false,
             editSuccess: false,
+            editFail: false
         }
     },
     methods: {
@@ -107,6 +112,12 @@ export default {
             this.editSuccess = true
             setTimeout(() => {
                 this.editSuccess = false
+            }, 1000);
+        },
+        showEditFail() {
+            this.editFail = true
+            setTimeout(() => {
+                this.editFail = false
             }, 1000);
         }
 
