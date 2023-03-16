@@ -1,7 +1,10 @@
 <template>
     <div class="posts-list">
         <h1>Posts List</h1>
-
+        <div class="success-msg" v-if="editSuccess">
+            <i class="fa fa-check"></i>
+            Post edited successfully
+        </div>
         <!-- deleted message -->
         <div class="success-msg" v-if="deleted">
                 <i class="fa fa-check"></i>
@@ -15,6 +18,7 @@
                     <th scope="col">Title</th>
                     <th scope="col">user Name</th>
                     <th scope="col">category_id</th>
+                    <th scope="col">category_name</th>
                     <th scope="col">body</th>
                     <th scope="col" colspan="2">actions</th>
                 </tr>
@@ -25,10 +29,10 @@
                     <td>{{ item.title }}</td>
                     <td>{{ item.user }}</td>
                     <td>{{ item.category_id }}</td>
+                    <td>{{ item.category_name}}</td>
                     <td>{{ item.body }}</td>
                     <td>
-                        <!-- <router-link :to="{name:'edit-post' ,params:{id:item.id}}" class="btn btn-info">Edit</router-link> -->
-                        <router-link :to="{name:'edit-post', params:{id:item.id}}" class="btn btn-info">Edit</router-link>
+                        <router-link :to="{name:'edit-post', params:{slug:item.slug}}" class="btn btn-info">Edit</router-link>
                     </td>
                     <td>
                         <button class="btn btn-danger" @click="deletePost(item.id)">Delete</button>
@@ -43,8 +47,11 @@
 </template>
   
 <script>
+// import useStore from "../../stores/store";
+// export const store = useStore();
 export default {
-    params: ['id'],
+    props: ["editSuccess"],
+    emits: ["updateSidebar"],
     data() {
         return {
             items: [],
@@ -57,8 +64,8 @@ export default {
         getPosts() {
             axios.get('/api/posts')
                 .then(response => {
-                    console.log(response.data.data);
                     this.items = response.data.data
+
                 })
                 .catch(error => {
                     console.log(error);

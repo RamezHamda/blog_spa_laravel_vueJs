@@ -50,14 +50,13 @@
     mounted() {
       axios.get(`/api/posts/${this.slug}`)
       .then((response) => {
-        this.post = response.data.data[0]
+        this.post = response.data.data
       }).catch((error) => {
         console.log(error);
       });
 
       axios.get(`/api/related-posts/${this.slug}`)
       .then((response) => {
-        console.log(response);
         this.posts = response.data.data
       }).catch((error) => {
         console.log(error);

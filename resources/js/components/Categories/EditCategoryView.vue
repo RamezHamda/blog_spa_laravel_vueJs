@@ -48,6 +48,7 @@ export default {
     mounted() {
         axios.get('/api/categories/' + this.id)
         .then((response) => {
+            console.log(response);
             this.field = response.data;
         }).catch((error) => {
             console.log(error);

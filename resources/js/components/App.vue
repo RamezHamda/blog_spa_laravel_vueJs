@@ -59,7 +59,12 @@
 
             <!-- main -->
             <main class="container">
-                <RouterView @update-sidebar="updateSidebar" :key="$route.path"></RouterView>
+                <RouterView
+                 @update-sidebar="updateSidebar" 
+                 :key="$route.path"
+                 @show-edit-success="showEditSuccess"
+                :editSuccess="editSuccess">
+                </RouterView>
             </main>
 
             <!-- Main footer -->
@@ -79,11 +84,13 @@
 import { RouterLink, RouterView } from 'vue-router'
 
 export default {
+    props: [],
     name: 'App',
     data() {
         return {
             overlayVisibility: false,
-            loggedIn: false
+            loggedIn: false,
+            editSuccess: false,
         }
     },
     methods: {
@@ -96,6 +103,12 @@ export default {
         updateSidebar() {
             this.loggedIn = !this.loggedIn
         },
+        showEditSuccess() {
+            this.editSuccess = true
+            setTimeout(() => {
+                this.editSuccess = false
+            }, 1000);
+        }
 
     },
     mounted(){

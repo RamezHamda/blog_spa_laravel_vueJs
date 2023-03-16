@@ -7,12 +7,16 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\PostResource;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 
 class PostController extends Controller
 {
     public function index()
     {
-        return PostResource::collection(Post::latest()->get());
+        return PostResource::collection(
+            Post::latest()->get()
+        );
     }
 
     public function store(Request $request)
@@ -55,41 +59,72 @@ class PostController extends Controller
         return new PostResource($post);
     }
 
+    // public function update(Request $request, Post $post)
+    // {
+    //     $request->validate([
+    //         'title' => 'required',
+    //         'body' => 'required',
+    //         'category_id' => 'required',
+    //         'file' => 'image|required'
+    //     ]);
+
+    //     $title = $request->title;
+    //     $category_id = $request->category_id;
+
+    //     if (!Post::count()) {
+    //         $postId = 1;
+    //     } else {
+    //         $postId = Post::latest()->first()->id + 1;
+    //     }
+
+    //     $slug = Str::slug($title, '-') . '-' . $postId;
+    //     $user_id = auth()->user()->id;
+    //     $body = $request->input('body');
+
+    //     if ($request->hasFile('file')) {
+    //         $imagePath = 'storage/' . $request->file('file')->store('postsImages', 'public');
+    //     } else {
+    //         $imagePath = $post->imagePath;
+    //     }
+
+    //     $post->update([
+    //         'title' => $title,
+    //         'category_id' => $category_id,
+    //         'slug' => $slug,
+    //         'user_id' => $user_id,
+    //         'body' => $body,
+    //         'imagePath' => $imagePath
+    //     ]);
+    // }
+
     public function update(Request $request, Post $post)
     {
         $request->validate([
             'title' => 'required',
+            'file' => 'nullable | image',
             'body' => 'required',
-            'category_id' => 'required',
-            'file' => 'image|required'
+            'category_id' => 'required'
         ]);
 
         $title = $request->title;
         $category_id = $request->category_id;
 
-        if (!Post::count()) {
-            $postId = 1;
-        } else {
-            $postId = Post::latest()->first()->id + 1;
-        }
 
-        $slug = Str::slug($title, '-') . '-' . $postId;
-        $user_id = auth()->user()->id;
+        $slug = Str::slug($title, '-') . '-' . $post->id;
         $body = $request->input('body');
 
-        if ($request->hasFile('file')) {
+        if ($request->file('file')) {
+            File::delete($post->imagePath);
             $imagePath = 'storage/' . $request->file('file')->store('postsImages', 'public');
-        } else {
-            $imagePath = $post->imagePath;
+            $post->imagePath = $imagePath;
         }
 
+        // update and save post
         $post->update([
             'title' => $title,
             'category_id' => $category_id,
             'slug' => $slug,
-            'user_id' => $user_id,
             'body' => $body,
-            'imagePath' => $imagePath
         ]);
     }
 

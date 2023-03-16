@@ -6,6 +6,7 @@ use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\HomeController;
 use App\Http\Controllers\API\PostController;
 use App\Http\Controllers\API\CategoryController;
+use App\Http\Controllers\API\DashboardPostController;
 use App\Http\Controllers\API\RelatedPostsController;
 use Laravel\Fortify\Http\Controllers\RegisteredUserController;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
@@ -40,17 +41,21 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::put('categories/{category}', [CategoryController::class, 'update']);
     Route::delete('categories/{category}', [CategoryController::class, 'destroy']);
     // Posts routes
-    Route::get('posts', [PostController::class, 'index']);
+    
     Route::post('posts/create', [PostController::class, 'store']);
-    Route::get('posts/{post:id}', [PostController::class, 'show']);
-    Route::put('posts/{post}', [PostController::class, 'update']);
+    // For edit post (Showing data in form fields when editing a post and updating it)
+    Route::get('posts/{post:slug}', [PostController::class, 'show']);
+    Route::put('posts/{post:slug}', [PostController::class, 'update']);
+    // For edit post (Showing data in form fields when editing a post and updating it)
     Route::delete('posts/{post}', [PostController::class, 'destroy']);
-    // Home routes
-    Route::get('home-posts', [HomeController::class, 'index']);
+    // Home routes 
+    
     // Related posts routes
-    Route::get('related-posts/{post:slug}', [RelatedPostsController::class, 'index']);
+    
 });
-
+Route::get('posts', [PostController::class, 'index']);
+Route::get('home-posts', [HomeController::class, 'index']);
+Route::get('related-posts/{post:slug}', [RelatedPostsController::class, 'index']);
 // Route::post('register', [RegisteredUserController::class, 'store']);
 
 // Route::post('register', [AuthController::class, 'register']);
